@@ -231,10 +231,15 @@
                                 <exclude>com/donation/app/DonationApplication**</exclude>
                                 <exclude>com/donation/app/infrastructure/mfa/GoogleAuthService**</exclude>
                                 <exclude>com/donation/app/infrastructure/security/**</exclude>
-                                <exclude>com/donation/app/usecase/MfaUseCase**</exclude>
+                                <exclude>com/donation/app/usecase/SetupGoogleMfaUseCase**</exclude>
+                                <exclude>com/donation/app/usecase/SetupSmsMfaUseCase**</exclude>
+                                <exclude>com/donation/app/usecase/SendSmsCodeUseCase**</exclude>
+                                <exclude>com/donation/app/usecase/VerifyAndEnableMfaUseCase**</exclude>
+                                <exclude>com/donation/app/usecase/GetProfileUseCase**</exclude>
                                 <exclude>com/donation/app/infrastructure/web/MfaController**</exclude>
                                 <exclude>com/donation/app/infrastructure/web/ProfileController**</exclude>
                                 <exclude>com/donation/app/infrastructure/web/VersionController**</exclude>
+                                <exclude>com/donation/app/infrastructure/web/api/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>

@@ -1,0 +1,337 @@
+openapi: 3.0.3
+info:
+  title: DonationSpace API
+  description: Спецификация API для реактивного приложения донатов DonationSpace уровня Праймал.
+  version: 1.1.0
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Регистрация нового пользователя
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '201':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Пользователь уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Авторизация пользователя (Вход)
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Неверные учетные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/login/verify-mfa:
+    post:
+      tags:
+        - Authentication
+      summary: Второй шаг авторизации (Верификация MFA)
+      operationId: verifyMfaAndLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaVerificationRequest'
+      responses:
+        '200':
+          description: Успешная верификация и вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Неверный код безопасности
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/profile:
+    get:
+      tags:
+        - Profile
+      summary: Получить профиль текущего пользователя
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Профиль успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+    put:
+      tags:
+        - Profile
+      summary: Редактировать данные профиля
+      operationId: updateProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Профиль успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+  /api/mfa/setup-google:
+    post:
+      tags:
+        - MFA
+      summary: Инициализация настройки Google Authenticator
+      operationId: setupGoogleMfa
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Секретный ключ успешно сгенерирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaSetupResponse'
+
+  /api/mfa/setup-sms:
+    post:
+      tags:
+        - MFA
+      summary: Инициализация настройки СМС MFA
+      operationId: setupSmsMfa
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Телефон успешно подготовлен к MFA
+
+  /api/mfa/send-sms-code:
+    post:
+      tags:
+        - MFA
+      summary: Отправить СМС проверочный код
+      operationId: sendSmsCode
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Код успешно отправлен в СМС
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/mfa/verify:
+    post:
+      tags:
+        - MFA
+      summary: Верифицировать и включить MFA
+      operationId: verifyAndEnableMfa
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaVerificationRequest'
+      responses:
+        '200':
+          description: Результат верификации
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /api/version:
+    get:
+      tags:
+        - Version
+      summary: Получить информацию о версии сервиса
+      operationId: getVersion
+      responses:
+        '200':
+          description: Информация о версии
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppVersionResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 6
+          example: strongPassword123
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+          format: uuid
+        email:
+          type: string
+        role:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        mfaRequired:
+          type: boolean
+        mfaType:
+          type: string
+        token:
+          type: string
+        email:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+
+    MfaVerificationRequest:
+      type: object
+      required:
+        - email
+        - code
+      properties:
+        email:
+          type: string
+        code:
+          type: string
+
+    UserProfileResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+          format: uuid
+        email:
+          type: string
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        headerUrl:
+          type: string
+        role:
+          type: string
+        mfaEnabled:
+          type: boolean
+        mfaType:
+          type: string
+        phoneNumber:
+          type: string
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        nickname:
+          type: string
+        avatarUrl:
+          type: string
+        headerUrl:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phoneNumber:
+          type: string
+
+    MfaSetupResponse:
+      type: object
+      properties:
+        secret:
+          type: string
+        qrCodeUrl:
+          type: string
+
+    AppVersionResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        commitHash:
+          type: string
+        buildTime:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string

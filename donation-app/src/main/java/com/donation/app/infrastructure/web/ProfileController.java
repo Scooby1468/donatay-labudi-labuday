@@ -1,10 +1,10 @@
 package com.donation.app.infrastructure.web;
 
 import com.donation.app.domain.User;
-import com.donation.app.domain.UserRepository;
-import com.donation.app.domain.DonationException;
+import com.donation.app.infrastructure.web.api.ProfileApi;
 import com.donation.app.infrastructure.web.dto.UpdateProfileRequest;
 import com.donation.app.infrastructure.web.dto.UserProfileResponse;
+import com.donation.app.usecase.GetProfileUseCase;
 import com.donation.app.usecase.UpdateProfileUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,19 +19,20 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @Tag(name = "Профиль", description = "Управление профилем пользователя")
 @SecurityRequirement(name = "BearerAuth")
-public class ProfileController {
+public class ProfileController implements ProfileApi {
 
-    private final UserRepository userRepository;
+    private final GetProfileUseCase getProfileUseCase;
     private final UpdateProfileUseCase updateProfileUseCase;
 
+    @Override
     @GetMapping
     @Operation(summary = "Получить профиль текущего авторизованного пользователя")
     public Mono<UserProfileResponse> getProfile(@AuthenticationPrincipal String email) {
-        return userRepository.findByEmail(email)
-                .switchIfEmpty(Mono.error(new DonationException("USER_NOT_FOUND", "User not found")))
+        return getProfileUseCase.getProfile(email)
                 .map(this::toResponse);
     }
 
+    @Override
     @PutMapping
     @Operation(summary = "Редактировать данные профиля")
     public Mono<UserProfileResponse> updateProfile(

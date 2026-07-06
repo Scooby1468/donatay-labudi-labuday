@@ -1,5 +1,6 @@
 package com.donation.app.infrastructure.web;
 
+import com.donation.app.infrastructure.web.api.AuthApi;
 import com.donation.app.infrastructure.web.dto.*;
 import com.donation.app.usecase.LoginUserUseCase;
 import com.donation.app.usecase.RegisterUserUseCase;
@@ -18,18 +19,19 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Tag(name = "Аутентификация", description = "Методы для регистрации и входа")
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final RegisterUserUseCase registerUserUseCase;
     private final LoginUserUseCase loginUserUseCase;
 
+    @Override
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Регистрация нового пользователя", description = "Создает пользователя по почте и паролю")
     @ApiResponse(responseCode = "201", description = "Пользователь успешно зарегистрирован",
             content = @Content(schema = @Schema(implementation = UserResponse.class)))
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных данных")
-    @ApiResponse(responseCode = "490", description = "Пользователь с таким email уже существует")
+    @ApiResponse(responseCode = "409", description = "Пользователь с таким email уже существует")
     public Mono<UserResponse> register(@Valid @RequestBody AuthRequest request) {
         return registerUserUseCase.register(request.getEmail(), request.getPassword())
                 .map(user -> UserResponse.builder()
@@ -40,43 +42,20 @@ public class AuthController {
                         .build());
     }
 
+    @Override
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя (вход)", description = "Возвращает JWT токен или требует прохождения MFA")
     @ApiResponse(responseCode = "200", description = "Успешный первый шаг авторизации",
             content = @Content(schema = @Schema(implementation = LoginResponse.class)))
     @ApiResponse(responseCode = "401", description = "Неверная почта или пароль")
     public Mono<LoginResponse> login(@Valid @RequestBody AuthRequest request) {
-        return loginUserUseCase.preLogin(request.getEmail(), request.getPassword())
-                .flatMap(result -> {
-                    if (result.mfaRequired()) {
-                        return Mono.just(LoginResponse.builder()
-                                .mfaRequired(true)
-                                .mfaType(result.mfaType())
-                                .email(request.getEmail())
-                                .build());
-                    } else {
-                        // Для получения UUID при успешном входе без MFA
-                        return userRepository.findByEmail(request.getEmail())
-                                .map(user -> LoginResponse.builder()
-                                        .mfaRequired(false)
-                                        .token(result.token())
-                                        .email(user.getEmail())
-                                        .uuid(user.getUuid())
-                                        .build());
-                    }
-                });
+        return loginUserUseCase.login(request.getEmail(), request.getPassword());
     }
 
+    @Override
     @PostMapping("/login/verify-mfa")
     @Operation(summary = "Второй шаг авторизации: верификация кода 2FA для входа")
     public Mono<LoginResponse> verifyMfaAndLogin(@RequestBody MfaVerificationRequest request) {
-        return loginUserUseCase.verifyMfaAndLogin(request.getEmail(), request.getCode())
-                .flatMap(token -> userRepository.findByEmail(request.getEmail())
-                        .map(user -> LoginResponse.builder()
-                                .mfaRequired(false)
-                                .token(token)
-                                .email(user.getEmail())
-                                .uuid(user.getUuid())
-                                .build()));
+        return loginUserUseCase.verifyMfaAndLogin(request.getEmail(), request.getCode());
     }
 }

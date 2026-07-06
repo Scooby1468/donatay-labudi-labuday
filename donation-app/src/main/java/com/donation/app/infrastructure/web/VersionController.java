@@ -1,5 +1,6 @@
 package com.donation.app.infrastructure.web;
 
+import com.donation.app.infrastructure.web.api.VersionApi;
 import com.donation.app.infrastructure.web.dto.AppVersionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,8 +19,9 @@ import java.util.Properties;
 @RequestMapping("/api/version")
 @RequiredArgsConstructor
 @Tag(name = "Версионирование", description = "Получение информации о текущей версии сервиса")
-public class VersionController {
+public class VersionController implements VersionApi {
 
+    @Override
     @GetMapping
     @Operation(summary = "Получить информацию о версии сервиса", 
                description = "Возвращает версию в формате: Мажорная.Релизная.Дата.Время.ХэшКомита")
@@ -41,10 +43,9 @@ public class VersionController {
                     }
                 }
             } catch (Exception e) {
-                // Игнорируем, если файла нет (например, при локальном запуске без сборки плагина)
+                // Игнорируем, если файла нет
             }
 
-            // Мажорная = 1, Релизная = 1
             String fullVersion = String.format("1.1.%s.%s.%s", formattedDate, formattedTime, commitHash);
 
             return AppVersionResponse.builder()
