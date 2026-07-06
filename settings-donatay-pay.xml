@@ -8,18 +8,6 @@
         <profile>
             <id>central-only</id>
             <repositories>
-                <!-- Local repository definition to search inside local compilation builds before going external -->
-                <repository>
-                    <id>local-builds</id>
-                    <name>Local Builds</name>
-                    <url>file://${user.home}/.m2/repository</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
                 <repository>
                     <id>central</id>
                     <name>Central Repository</name>
