@@ -17,6 +17,7 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                  defaultValueComputed: "nextval('users_id_seq')"
               - column:
                   name: uuid
                   type: UUID
