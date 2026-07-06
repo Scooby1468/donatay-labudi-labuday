@@ -1,0 +1,27 @@
+# Maven build files
+**/target/
+**/*.class
+
+# Local Maven dependency cache
+.m2/
+
+# SSH private key protection
+.ssh/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# Secrets & Local Env
+application-local.yml
+*.log

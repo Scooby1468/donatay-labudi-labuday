@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: expert
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nickname
+                  type: VARCHAR(100)
+              - column:
+                  name: avatar_url
+                  type: VARCHAR(500)
+              - column:
+                  name: header_url
+                  type: VARCHAR(500)
+              - column:
+                  name: mfa_enabled
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+              - column:
+                  name: mfa_type
+                  type: VARCHAR(50)
+              - column:
+                  name: mfa_secret
+                  type: VARCHAR(255)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(50)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+

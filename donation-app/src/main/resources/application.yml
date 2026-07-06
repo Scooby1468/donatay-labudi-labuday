@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: donation-app
+
+  # Liquibase configuration (runs via standard JDBC connection)
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/donation_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  # R2DBC configuration (used by Spring Data R2DBC for reactive work)
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/donation_db}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:postgres}
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+# JWT Configuration
+jwt:
+  secret: "mySuperSecretKeyForJWTAuthThatIsVeryLongAndSecure123456!"
+  expiration: 3600 # 1 hour
