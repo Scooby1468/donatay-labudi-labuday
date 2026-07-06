@@ -77,10 +77,15 @@
             <version>1.0.5.RELEASE</version>
         </dependency>
 
-        <!-- Liquibase for DB migrations (it requires JDBC) -->
+        <!-- Liquibase for DB migrations -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <!-- Required by Liquibase to run standard JDBC connection under WebFlux -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
         <!-- JDBC PostgreSQL Driver for Liquibase to run migration on startup -->
         <dependency>
