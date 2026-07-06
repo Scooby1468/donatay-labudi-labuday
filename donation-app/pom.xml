@@ -5,31 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.donation</groupId>
+        <artifactId>donation-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.donation</groupId>
     <artifactId>donation-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>donation-app</name>
     <description>Donation Application with Reactive Stack and Clean Architecture</description>
 
-    <properties>
-        <java.version>21</java.version>
-        <jjwt.version>0.12.6</jjwt.version>
-        <springdoc.version>2.5.0</springdoc.version>
-        <jacoco.version>0.8.12</jacoco.version>
-        <git-commit-id-plugin.version>8.0.2</git-commit-id-plugin.version>
-    </properties>
-
     <dependencies>
-        <!-- Apache Commons Codec for Base32 / Google Authenticator -->
+        <!-- Connect our API-First auto-generated Contracts Module -->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+            <groupId>com.donation</groupId>
+            <artifactId>donatay-pay-contract</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- WebFlux (Reactive Stack) -->
@@ -62,7 +54,6 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <!-- H2 R2DBC driver -->
         <dependency>
             <groupId>io.r2dbc</groupId>
@@ -92,6 +83,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Apache Commons Codec for Base32 / Google Authenticator -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
 
         <!-- Lombok -->
@@ -158,31 +155,6 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-
-            <!-- Git Commit ID Plugin for Versioning -->
-            <plugin>
-                <groupId>io.github.git-commit-id</groupId>
-                <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>${git-commit-id-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>get-the-git-infos</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-                    <includeOnlyProperties>
-                        <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
-                        <includeOnlyProperty>^git.build.time$</includeOnlyProperty>
-                    </includeOnlyProperties>
-                    <commitIdGenerationMode>flat</commitIdGenerationMode>
                 </configuration>
             </plugin>
             

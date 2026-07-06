@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.donation</groupId>
+    <artifactId>donation-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- pom packaging for multi-module parent -->
+    <name>donation-parent</name>
+    <description>Parent POM for DonationSpace Multi-Module Project</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <jjwt.version>0.12.6</jjwt.version>
+        <springdoc.version>2.5.0</springdoc.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <git-commit-id-plugin.version>8.0.2</git-commit-id-plugin.version>
+        <openapi-generator.version>7.6.0</openapi-generator.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+    </properties>
+
+    <modules>
+        <module>donatay-pay-contract</module>
+        <module>donation-app</module>
+    </modules>
+</project>
