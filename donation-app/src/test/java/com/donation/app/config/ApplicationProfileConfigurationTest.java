@@ -47,11 +47,12 @@ class ApplicationProfileConfigurationTest {
         assertTrue(content.contains("${SPRING_LIQUIBASE_PASSWORD}"));
         assertTrue(content.contains("${SPRING_R2DBC_PASSWORD}"));
         assertTrue(content.contains("${APP_CORS_ALLOWED_ORIGINS}"));
+        assertTrue(content.contains("${INTERNAL_SERVICE_TOKEN}"));
 
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(content);
         while (matcher.find()) {
             String placeholder = matcher.group(1);
-            if (placeholder.endsWith("_PASSWORD") || placeholder.equals("JWT_SECRET") || placeholder.equals("APP_CORS_ALLOWED_ORIGINS")) {
+            if (placeholder.endsWith("_PASSWORD") || placeholder.equals("JWT_SECRET") || placeholder.equals("APP_CORS_ALLOWED_ORIGINS") || placeholder.equals("INTERNAL_SERVICE_TOKEN")) {
                 assertFalse(placeholder.contains(":"), "Production placeholder must not have default: " + placeholder);
             }
         }

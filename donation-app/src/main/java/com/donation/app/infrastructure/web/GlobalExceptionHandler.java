@@ -19,7 +19,8 @@ public class GlobalExceptionHandler {
         HttpStatus status = switch (ex.getCode()) {
             case "BAD_REQUEST" -> HttpStatus.BAD_REQUEST;
             case "USER_ALREADY_EXISTS" -> HttpStatus.CONFLICT;
-            case "INVALID_CREDENTIALS" -> HttpStatus.UNAUTHORIZED;
+            case "INVALID_CREDENTIALS", "INTERNAL_AUTH_FAILED" -> HttpStatus.UNAUTHORIZED;
+            case "PROFILE_ALREADY_EXISTS" -> HttpStatus.CONFLICT;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
         return ResponseEntity.status(status)

@@ -111,6 +111,18 @@ GET /api/version
 
 Auth endpoints находятся в `auth-service`.
 
+## Internal API
+
+Для MVP `auth-service` синхронно создаёт профиль после регистрации через внутренний endpoint:
+
+```text
+POST /internal/users
+Header: X-Internal-Token: <INTERNAL_SERVICE_TOKEN>
+Body: { "uuid": "...", "email": "user@example.com" }
+```
+
+Этот endpoint не предназначен для frontend. Значение `INTERNAL_SERVICE_TOKEN` должно совпадать с настройкой в `auth-service`.
+
 Swagger UI после запуска:
 
 ```text

@@ -218,6 +218,8 @@ MVP — это минимальная версия продукта, в кото
 - [x] Удалить старые auth/MFA controllers и use case-и из `user-data-service`.
 - [x] Убрать смену email/password из profile API `user-data-service`.
 - [x] Настроить взаимодействие сервисов через JWT subject/user UUID.
+- [x] Добавить синхронное создание профиля в `user-data-service` после регистрации в `auth-service`.
+- [x] Защитить internal profile endpoint через `INTERNAL_SERVICE_TOKEN`.
 - [ ] Обновить frontend API URLs после разделения сервисов.
 
 ## 2.1. Clean Architecture внутри сервисов
@@ -476,6 +478,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] `2.0` Создать и инициализировать `auth-service`.
 - [ ] `2.1` Развязать use case-и от web DTO и infrastructure.
 - [x] `3.1` Согласовать JWT contract между `auth-service` и `user-data-service`.
+- [x] `3.1.1` Синхронизировать создание user-data профиля при регистрации.
 - [ ] `3.2` Переделать MFA flow.
 - [ ] `4.x` Добавить домен донатов.
 - [ ] `5.x` Добавить mock payments.
@@ -499,3 +502,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — в `auth-service` добавлен security audit: таблица `auth_service.security_audit_events`, порт `SecurityAuditLog`, persistence adapter и запись событий регистрации, логина и MFA.
 - [x] 2026-07-07 — `user-data-service` очищен от старой auth/MFA-логики: удалены auth/MFA controllers/use cases, user-data OpenAPI оставляет только profile/version, profile update больше не меняет email/password.
 - [x] 2026-07-07 — согласован JWT contract между сервисами: общий `JWT_SECRET`, общий `JWT_ISSUER`, `subject=userUuid`, claim `role`, TTL 900 секунд по умолчанию; добавлены тесты на issuer, битый и просроченный токен.
+- [x] 2026-07-07 — добавлена синхронизация регистрации: `auth-service` после создания auth user вызывает `user-data-service` `POST /internal/users`, endpoint защищён `INTERNAL_SERVICE_TOKEN`.
