@@ -45,12 +45,13 @@ class ApplicationProfileConfigurationTest {
         assertTrue(content.contains("${JWT_SECRET}"));
         assertTrue(content.contains("${SPRING_LIQUIBASE_PASSWORD}"));
         assertTrue(content.contains("${SPRING_R2DBC_PASSWORD}"));
+        assertTrue(content.contains("${APP_CORS_ALLOWED_ORIGINS}"));
 
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(content);
         while (matcher.find()) {
             String placeholder = matcher.group(1);
-            if (placeholder.endsWith("_PASSWORD") || placeholder.equals("JWT_SECRET")) {
-                assertFalse(placeholder.contains(":"), "Production secret placeholder must not have default: " + placeholder);
+            if (placeholder.endsWith("_PASSWORD") || placeholder.equals("JWT_SECRET") || placeholder.equals("APP_CORS_ALLOWED_ORIGINS")) {
+                assertFalse(placeholder.contains(":"), "Production placeholder must not have default: " + placeholder);
             }
         }
     }

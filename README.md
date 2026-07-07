@@ -60,6 +60,16 @@ SPRING_R2DBC_URL=r2dbc:postgresql://host:5432/donation_db
 SPRING_R2DBC_USERNAME=...
 SPRING_R2DBC_PASSWORD=...
 JWT_SECRET=...
+APP_CORS_ALLOWED_ORIGINS=https://your-frontend-domain.example
+```
+
+Для локальной разработки CORS по умолчанию разрешён только для:
+
+```text
+http://localhost:3000
+http://localhost:5173
+http://127.0.0.1:3000
+http://127.0.0.1:5173
 ```
 
 Swagger UI после запуска:
