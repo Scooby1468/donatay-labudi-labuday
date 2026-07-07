@@ -207,7 +207,8 @@ MVP — это минимальная версия продукта, в кото
 - [ ] Уточнить целевое имя текущего backend-сервиса: `user-data-service`.
 - [ ] Создать/перенести репозиторий `user-data-service` в `donatay-platform`.
 - [ ] Разделить OpenAPI-контракты auth и user-data.
-- [ ] Перенести регистрацию/логин/JWT/MFA из текущего backend в `auth-service`.
+- [x] Перенести базовую регистрацию/логин/JWT/MFA-login из текущего backend в `auth-service`.
+- [ ] Перенести setup/verify MFA, SMS-code flow и security audit в `auth-service`.
 - [ ] Оставить профиль пользователя и публичные данные в `user-data-service`.
 - [ ] Настроить взаимодействие сервисов через JWT subject/user UUID.
 - [ ] Обновить frontend API URLs после разделения сервисов.
@@ -483,3 +484,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — выполнен пункт `1.3`: CORS закрыт на явный список origin-ов, добавлены настройки origin-ов по профилям и тесты public/protected endpoints + CORS preflight.
 - [x] 2026-07-07 — выполнен пункт `1.4`: JaCoCo теперь проверяет instruction и branch coverage 70%+, убраны лишние исключения, добавлены тесты use case, web, security, MFA и version-слоёв.
 - [x] 2026-07-07 — создан и инициализирован отдельный репозиторий `donatay-platform/auth-service` для будущего выноса регистрации, логина, JWT, MFA и security audit.
+- [x] 2026-07-07 — в `auth-service` перенесены базовые auth endpoints: регистрация, логин, MFA-login, JWT, auth persistence skeleton и Liquibase-схема `auth_users`.
