@@ -12,7 +12,8 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION_SECONDS:3600}
+  issuer: ${JWT_ISSUER:donatay-auth-service}
+  expiration: ${JWT_EXPIRATION_SECONDS:900}
 
 app:
   cors:

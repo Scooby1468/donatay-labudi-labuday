@@ -8,8 +8,9 @@ spring:
     password: ${SPRING_R2DBC_PASSWORD:}
 
 jwt:
-  secret: ${JWT_SECRET:test-jwt-secret-at-least-32-characters-long}
-  expiration: ${JWT_EXPIRATION_SECONDS:3600}
+  secret: ${JWT_SECRET:test-shared-jwt-secret-at-least-32-characters-long}
+  issuer: ${JWT_ISSUER:donatay-auth-service}
+  expiration: ${JWT_EXPIRATION_SECONDS:900}
 
 app:
   cors:

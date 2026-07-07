@@ -83,6 +83,22 @@ http://127.0.0.1:3000
 http://127.0.0.1:5173
 ```
 
+## JWT contract
+
+`user-data-service` доверяет access token, выпущенному `auth-service`.
+
+Согласованный контракт:
+
+```text
+signing secret: JWT_SECRET, общий для backend-сервисов
+issuer:         JWT_ISSUER, по умолчанию donatay-auth-service
+subject:        user UUID
+role claim:     ROLE_USER и будущие роли
+TTL:            900 секунд по умолчанию
+```
+
+Сервис берёт `subject` из JWT и ищет профиль по UUID.
+
 ## API
 
 В этом сервисе остались только user-data endpoints:

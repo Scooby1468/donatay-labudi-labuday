@@ -34,7 +34,8 @@ class ApplicationProfileConfigurationTest {
 
         assertNoForbiddenSecrets(content);
         assertTrue(content.contains("local_dev_password_change_me"));
-        assertTrue(content.contains("local-development-jwt-secret"));
+        assertTrue(content.contains("local-development-shared-jwt-secret"));
+        assertTrue(content.contains("JWT_ISSUER:donatay-auth-service"));
     }
 
     @Test

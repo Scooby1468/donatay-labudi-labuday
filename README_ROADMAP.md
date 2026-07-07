@@ -217,7 +217,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] Оставить профиль пользователя и публичные данные в `user-data-service`.
 - [x] Удалить старые auth/MFA controllers и use case-и из `user-data-service`.
 - [x] Убрать смену email/password из profile API `user-data-service`.
-- [ ] Настроить взаимодействие сервисов через JWT subject/user UUID.
+- [x] Настроить взаимодействие сервисов через JWT subject/user UUID.
 - [ ] Обновить frontend API URLs после разделения сервисов.
 
 ## 2.1. Clean Architecture внутри сервисов
@@ -263,11 +263,12 @@ MVP — это минимальная версия продукта, в кото
 
 ## 3.1. JWT
 
-- [ ] Использовать `uuid` пользователя как JWT subject вместо email.
-- [ ] Добавить claims минимального размера.
-- [ ] Проверить expiration.
-- [ ] Добавить тесты на просроченный/битый/валидный токен.
-- [ ] Обновить security filter под UUID subject.
+- [x] Использовать `uuid` пользователя как JWT subject вместо email.
+- [x] Добавить claims минимального размера.
+- [x] Проверить issuer/secret/role contract между `auth-service` и `user-data-service`.
+- [x] Проверить expiration.
+- [x] Добавить тесты на битый токен и неверный issuer.
+- [x] Обновить security filter под UUID subject.
 
 ## 3.2. MFA flow
 
@@ -474,7 +475,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] `1.4` Настроить честное покрытие JaCoCo.
 - [x] `2.0` Создать и инициализировать `auth-service`.
 - [ ] `2.1` Развязать use case-и от web DTO и infrastructure.
-- [ ] `3.1` Перевести JWT subject с email на UUID.
+- [x] `3.1` Согласовать JWT contract между `auth-service` и `user-data-service`.
 - [ ] `3.2` Переделать MFA flow.
 - [ ] `4.x` Добавить домен донатов.
 - [ ] `5.x` Добавить mock payments.
@@ -497,3 +498,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — в `auth-service` перенесены setup Google MFA, setup SMS MFA, отправка SMS-кода и verify/enable MFA.
 - [x] 2026-07-07 — в `auth-service` добавлен security audit: таблица `auth_service.security_audit_events`, порт `SecurityAuditLog`, persistence adapter и запись событий регистрации, логина и MFA.
 - [x] 2026-07-07 — `user-data-service` очищен от старой auth/MFA-логики: удалены auth/MFA controllers/use cases, user-data OpenAPI оставляет только profile/version, profile update больше не меняет email/password.
+- [x] 2026-07-07 — согласован JWT contract между сервисами: общий `JWT_SECRET`, общий `JWT_ISSUER`, `subject=userUuid`, claim `role`, TTL 900 секунд по умолчанию; добавлены тесты на issuer, битый и просроченный токен.
