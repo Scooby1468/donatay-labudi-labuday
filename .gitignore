@@ -23,5 +23,10 @@
 Thumbs.db
 
 # Secrets & Local Env
+.env
+.env.*
 application-local.yml
 *.log
+
+# Maven Wrapper files are intentionally committed:
+# mvnw, mvnw.cmd, .mvn/wrapper/maven-wrapper.jar, .mvn/wrapper/maven-wrapper.properties
