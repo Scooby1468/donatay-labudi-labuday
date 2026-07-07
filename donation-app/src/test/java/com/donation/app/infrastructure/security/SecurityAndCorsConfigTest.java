@@ -27,9 +27,9 @@ class SecurityAndCorsConfigTest {
     private JwtProvider jwtProvider;
 
     @Test
-    void publicAuthEndpointWithoutToken_IsAllowed() {
+    void publicVersionEndpointWithoutToken_IsAllowed() {
         webTestClient.get()
-                .uri("/api/auth/ping")
+                .uri("/api/version/ping")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("public");
@@ -46,7 +46,7 @@ class SecurityAndCorsConfigTest {
     @Test
     void corsPreflightFromAllowedOrigin_IsAllowed() {
         webTestClient.options()
-                .uri("http://localhost/api/auth/ping")
+                .uri("http://localhost/api/version/ping")
                 .header(HttpHeaders.ORIGIN, "http://allowed.test")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.GET.name())
                 .exchange()
@@ -58,7 +58,7 @@ class SecurityAndCorsConfigTest {
     @Test
     void corsPreflightFromUnknownOrigin_IsRejected() {
         webTestClient.options()
-                .uri("http://localhost/api/auth/ping")
+                .uri("http://localhost/api/version/ping")
                 .header(HttpHeaders.ORIGIN, "http://evil.test")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, HttpMethod.GET.name())
                 .exchange()
@@ -68,7 +68,7 @@ class SecurityAndCorsConfigTest {
     @RestController
     static class TestEndpoints {
 
-        @GetMapping(value = "/api/auth/ping", produces = MediaType.TEXT_PLAIN_VALUE)
+        @GetMapping(value = "/api/version/ping", produces = MediaType.TEXT_PLAIN_VALUE)
         Mono<String> publicPing() {
             return Mono.just("public");
         }

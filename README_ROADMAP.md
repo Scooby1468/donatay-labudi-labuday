@@ -210,11 +210,13 @@ MVP — это минимальная версия продукта, в кото
 - [x] Настроить отдельные PostgreSQL-схемы под backend-сервисы в одной БД:
   - `auth_service`;
   - `user_data_service`.
-- [ ] Разделить OpenAPI-контракты auth и user-data.
+- [x] Разделить OpenAPI-контракт `user-data-service`: убрать auth/MFA endpoints из user-data API.
 - [x] Перенести базовую регистрацию/логин/JWT/MFA-login из текущего backend в `auth-service`.
 - [x] Перенести setup/verify MFA и SMS-code flow в `auth-service`.
 - [x] Перенести security audit в `auth-service`.
-- [ ] Оставить профиль пользователя и публичные данные в `user-data-service`.
+- [x] Оставить профиль пользователя и публичные данные в `user-data-service`.
+- [x] Удалить старые auth/MFA controllers и use case-и из `user-data-service`.
+- [x] Убрать смену email/password из profile API `user-data-service`.
 - [ ] Настроить взаимодействие сервисов через JWT subject/user UUID.
 - [ ] Обновить frontend API URLs после разделения сервисов.
 
@@ -494,3 +496,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — добавлено правило именования новых Liquibase changeset id через первые 10 цифр текущего epoch millis.
 - [x] 2026-07-07 — в `auth-service` перенесены setup Google MFA, setup SMS MFA, отправка SMS-кода и verify/enable MFA.
 - [x] 2026-07-07 — в `auth-service` добавлен security audit: таблица `auth_service.security_audit_events`, порт `SecurityAuditLog`, persistence adapter и запись событий регистрации, логина и MFA.
+- [x] 2026-07-07 — `user-data-service` очищен от старой auth/MFA-логики: удалены auth/MFA controllers/use cases, user-data OpenAPI оставляет только profile/version, profile update больше не меняет email/password.

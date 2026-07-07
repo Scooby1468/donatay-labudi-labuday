@@ -6,9 +6,10 @@ import com.donation.app.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -16,16 +17,25 @@ import static org.mockito.Mockito.when;
 class ProfileUseCasesTest {
 
     private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
     }
 
     @Test
-    void getProfile_Success() {
+    void getProfile_ByUuidSuccess() {
+        UUID uuid = UUID.randomUUID();
+        User user = User.builder().uuid(uuid).email("user@example.com").build();
+        when(userRepository.findByUuid(uuid)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(new GetProfileUseCase(userRepository).getProfile(uuid.toString()))
+                .expectNext(user)
+                .verifyComplete();
+    }
+
+    @Test
+    void getProfile_ByEmailFallbackSuccess() {
         User user = User.builder().email("user@example.com").build();
         when(userRepository.findByEmail("user@example.com")).thenReturn(Mono.just(user));
 
@@ -44,39 +54,40 @@ class ProfileUseCasesTest {
     }
 
     @Test
-    void updateProfile_ChangesEmailAndPassword() {
-        User user = User.builder().email("old@example.com").password("old").build();
-        when(userRepository.findByEmail("old@example.com")).thenReturn(Mono.just(user));
-        when(userRepository.findByEmail("new@example.com")).thenReturn(Mono.empty());
-        when(passwordEncoder.encode("new-password")).thenReturn("encoded");
+    void updateProfile_UpdatesOnlyProfileFields() {
+        UUID uuid = UUID.randomUUID();
+        User user = User.builder().uuid(uuid).email("user@example.com").password("old-hash").build();
+        when(userRepository.findByUuid(uuid)).thenReturn(Mono.just(user));
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(new UpdateProfileUseCase(userRepository, passwordEncoder)
-                        .updateProfile("old@example.com", null, null, null, "new@example.com", "new-password", "+79990000000"))
-                .expectNextMatches(updated -> "new@example.com".equals(updated.getEmail())
-                        && "encoded".equals(updated.getPassword())
-                        && "+79990000000".equals(updated.getPhoneNumber()))
+        StepVerifier.create(new UpdateProfileUseCase(userRepository)
+                        .updateProfile(uuid.toString(), "Nick", "avatar", "header", "+79990000000"))
+                .expectNextMatches(updated -> "Nick".equals(updated.getNickname())
+                        && "avatar".equals(updated.getAvatarUrl())
+                        && "header".equals(updated.getHeaderUrl())
+                        && "+79990000000".equals(updated.getPhoneNumber())
+                        && "old-hash".equals(updated.getPassword()))
                 .verifyComplete();
     }
 
     @Test
-    void updateProfile_EmailTaken() {
-        User user = User.builder().email("old@example.com").build();
-        when(userRepository.findByEmail("old@example.com")).thenReturn(Mono.just(user));
-        when(userRepository.findByEmail("busy@example.com")).thenReturn(Mono.just(User.builder().email("busy@example.com").build()));
+    void updateProfile_KeepsExistingValuesWhenFieldsAreNull() {
+        User user = User.builder().email("user@example.com").nickname("Old").build();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Mono.just(user));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(new UpdateProfileUseCase(userRepository, passwordEncoder)
-                        .updateProfile("old@example.com", null, null, null, "busy@example.com", null, null))
-                .expectErrorMatches(error -> error instanceof DonationException && "EMAIL_TAKEN".equals(((DonationException) error).getCode()))
-                .verify();
+        StepVerifier.create(new UpdateProfileUseCase(userRepository)
+                        .updateProfile("user@example.com", null, null, null, null))
+                .expectNextMatches(updated -> "Old".equals(updated.getNickname()))
+                .verifyComplete();
     }
 
     @Test
     void updateProfile_UserNotFound() {
         when(userRepository.findByEmail("missing@example.com")).thenReturn(Mono.empty());
 
-        StepVerifier.create(new UpdateProfileUseCase(userRepository, passwordEncoder)
-                        .updateProfile("missing@example.com", null, null, null, null, null, null))
+        StepVerifier.create(new UpdateProfileUseCase(userRepository)
+                        .updateProfile("missing@example.com", null, null, null, null))
                 .expectErrorMatches(error -> error instanceof DonationException && "USER_NOT_FOUND".equals(((DonationException) error).getCode()))
                 .verify();
     }

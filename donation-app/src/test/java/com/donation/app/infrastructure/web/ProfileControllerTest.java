@@ -46,7 +46,7 @@ class ProfileControllerTest {
     void updateProfile_UsesAuthenticatedEmail() {
         User updated = user().toBuilder().nickname("NewNick").build();
         UpdateProfileRequest request = new UpdateProfileRequest().nickname("NewNick");
-        when(updateProfileUseCase.updateProfile("user@example.com", "NewNick", null, null, null, null, null))
+        when(updateProfileUseCase.updateProfile("user@example.com", "NewNick", null, null, null))
                 .thenReturn(Mono.just(updated));
 
         StepVerifier.create(controller.updateProfile(Mono.just(request), null).contextWrite(securityContext()))

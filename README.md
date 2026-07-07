@@ -1,6 +1,8 @@
 # DonationSpace Backend
 
-Backend-сервис DonationSpace: Java 21, Spring Boot 3, WebFlux, R2DBC, PostgreSQL, Liquibase, OpenAPI.
+User Data Service для Donatay Platform: Java 21, Spring Boot 3, WebFlux, R2DBC, PostgreSQL, Liquibase, OpenAPI.
+
+Сервис отвечает только за профильные и публичные пользовательские данные. Регистрация, логин, JWT, MFA и security audit вынесены в `auth-service`.
 
 ## Требования
 
@@ -80,6 +82,18 @@ http://localhost:5173
 http://127.0.0.1:3000
 http://127.0.0.1:5173
 ```
+
+## API
+
+В этом сервисе остались только user-data endpoints:
+
+```text
+GET /api/profile
+PUT /api/profile
+GET /api/version
+```
+
+Auth endpoints находятся в `auth-service`.
 
 Swagger UI после запуска:
 

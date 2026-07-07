@@ -16,6 +16,10 @@ app:
   cors:
     allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:}
 
+info:
+  app:
+    version: ${USER_DATA_SERVICE_VERSION:0.1.0-SNAPSHOT}
+
 logging:
   level:
     root: INFO

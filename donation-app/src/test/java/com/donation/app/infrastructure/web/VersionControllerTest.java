@@ -7,9 +7,9 @@ class VersionControllerTest {
 
     @Test
     void getVersion_ReturnsApplicationVersion() {
-        StepVerifier.create(new VersionController().getVersion(null))
+        StepVerifier.create(new VersionController("user-data-service", "0.1.0-test").getVersion(null))
                 .expectNextMatches(response -> response.getStatusCode().is2xxSuccessful()
-                        && "donation-app".equals(response.getBody().getName())
+                        && "user-data-service".equals(response.getBody().getName())
                         && response.getBody().getVersion() != null
                         && response.getBody().getBuildTime() != null)
                 .verifyComplete();
