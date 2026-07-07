@@ -221,6 +221,7 @@ MVP — это минимальная версия продукта, в кото
 - [x] Добавить синхронное создание профиля в `user-data-service` после регистрации в `auth-service`.
 - [x] Защитить internal profile endpoint через `INTERNAL_SERVICE_TOKEN`.
 - [x] Сделать `POST /internal/users` идемпотентным по `uuid` пользователя.
+- [x] Добавить retry в `auth-service` при вызове `user-data-service`.
 - [ ] Обновить frontend API URLs после разделения сервисов.
 
 ## 2.1. Clean Architecture внутри сервисов
@@ -505,3 +506,4 @@ MVP — это минимальная версия продукта, в кото
 - [x] 2026-07-07 — согласован JWT contract между сервисами: общий `JWT_SECRET`, общий `JWT_ISSUER`, `subject=userUuid`, claim `role`, TTL 900 секунд по умолчанию; добавлены тесты на issuer, битый и просроченный токен.
 - [x] 2026-07-07 — добавлена синхронизация регистрации: `auth-service` после создания auth user вызывает `user-data-service` `POST /internal/users`, endpoint защищён `INTERNAL_SERVICE_TOKEN`.
 - [x] 2026-07-07 — `POST /internal/users` сделан идемпотентным: повторный запрос с тем же `uuid` возвращает существующий профиль и не создаёт дубль.
+- [x] 2026-07-07 — в `auth-service` добавлен retry для синхронного создания профиля в `user-data-service`: повторяются сетевые ошибки и HTTP `5xx`, ошибки `4xx` не ретраятся.
